@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -21,21 +21,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function SearchForm(props) {
+export default function SearchTableRow(props) {
   const classes = useStyles();
-  const { result } = props;
+  const { repo: { id, name, stargazers_count: stargazersCount, html_url: htmlUrl } } = props;
   return (
-    <Grid item key={result} xs={12} sm={6} md={4}>
+    <Grid item key={id} xs={12} sm={6} md={4}>
       <Card className={classes.card}>
         <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="h5" component="h2">
-            Repo name
+            {name}
+          </Typography>
+          <Typography gutterBottom variant="h6" component="h3">
+            {`Stars - ${stargazersCount}`}
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" color="primary">
+          <Link href={htmlUrl} color="primary">
             Open
-          </Button>
+          </Link>
         </CardActions>
       </Card>
     </Grid>

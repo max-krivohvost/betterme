@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchTableRow from './SearchTableRow';
+import SearchContext from '../State/Search/searchContext';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -13,19 +15,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const results = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 export default function SearchForm() {
   const classes = useStyles();
+  const searchContext = useContext(SearchContext);
 
+  const { loading, perPage, repos: { items = [], total_count: totalCount = 0 } } = searchContext;
+  const numberPages = Math.ceil(totalCount / perPage);
   return (
     <Container className={classes.cardGrid} maxWidth="md">
-      <Grid container spacing={4}>
-        {results.map((result) => (
-          <SearchTableRow card={result} />
-        ))}
-      </Grid>
-      <Pagination count={10} color="secondary" />
+      {loading
+        ? (
+          <Grid align="center">
+            <CircularProgress />
+          </Grid>
+        )
+        : (items.length > 0
+          && (
+          <Grid container spacing={4}>
+            {items.map((result) => (
+              <SearchTableRow repo={result} />
+            ))}
+            <Pagination count={numberPages} color="secondary" />
+          </Grid>
+          )
+        )}
     </Container>
   );
 }

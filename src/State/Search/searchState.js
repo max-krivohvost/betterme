@@ -12,6 +12,7 @@ const SearchState = (props) => {
   const initialState = {
     repos: [],
     page: 0,
+    perPage: 30,
     loading: false,
   };
 
@@ -24,24 +25,23 @@ const SearchState = (props) => {
   const setLoading = () => dispatch({ type: SET_LOADING });
 
   // Get Repos
-  const searchRepos = async (repoName) => {
+  const searchRepos = async (repoName, page = 0) => {
     setLoading();
 
     const res = await axios.get(
-      `https://api.github.com/search/repositories?q=${encodeURI(repoName)}&sort=stars&order=desc`,
+      `https://api.github.com/search/repositories?q=${encodeURI(repoName)}&sort=stars&order=desc&page=${page}&per_page=${initialState.perPage}`,
     );
-
     dispatch({
       type: SEARCH_REPOS,
       payload: res.data,
     });
   };
-
   return (
     <SearchContext.Provider
       value={{
         repos: state.repos,
         loading: state.loading,
+        perPage: state.perPage,
         searchRepos,
         clearSearch,
       }}
