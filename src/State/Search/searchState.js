@@ -11,7 +11,8 @@ import {
 const SearchState = (props) => {
   const initialState = {
     repos: [],
-    page: 0,
+    page: 1,
+    repoName: '',
     perPage: 30,
     loading: false,
   };
@@ -25,15 +26,16 @@ const SearchState = (props) => {
   const setLoading = () => dispatch({ type: SET_LOADING });
 
   // Get Repos
-  const searchRepos = async (repoName, page = 0) => {
+  const searchRepos = async (repoName, page = 1) => {
     setLoading();
 
     const res = await axios.get(
       `https://api.github.com/search/repositories?q=${encodeURI(repoName)}&sort=stars&order=desc&page=${page}&per_page=${initialState.perPage}`,
     );
+
     dispatch({
       type: SEARCH_REPOS,
-      payload: res.data,
+      payload: { data: res.data, repoName, page },
     });
   };
   return (
@@ -42,6 +44,8 @@ const SearchState = (props) => {
         repos: state.repos,
         loading: state.loading,
         perPage: state.perPage,
+        repoName: state.repoName,
+        page: state.page,
         searchRepos,
         clearSearch,
       }}

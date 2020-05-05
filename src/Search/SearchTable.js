@@ -19,8 +19,18 @@ export default function SearchForm() {
   const classes = useStyles();
   const searchContext = useContext(SearchContext);
 
-  const { loading, perPage, repos: { items = [], total_count: totalCount = 0 } } = searchContext;
-  const numberPages = Math.ceil(totalCount / perPage);
+  const {
+    loading,
+    repoName,
+    perPage,
+    page,
+    repos: { items = [], total_count: totalCount = 0 },
+  } = searchContext;
+  const numberPages = Math.floor(totalCount / perPage);
+  const changePage = (event, page) => {
+    searchContext.searchRepos(repoName, page);
+  };
+
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       {loading
@@ -32,10 +42,10 @@ export default function SearchForm() {
         : (items.length > 0
           && (
           <Grid container spacing={4}>
-            {items.map((result) => (
-              <SearchTableRow repo={result} />
+            {items.map((repo) => (
+              <SearchTableRow repo={repo} />
             ))}
-            <Pagination count={numberPages} color="secondary" />
+            <Pagination page={page} onChange={changePage} count={numberPages} color="secondary" />
           </Grid>
           )
         )}
