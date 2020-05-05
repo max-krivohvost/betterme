@@ -33,11 +33,16 @@ export default function SearchForm() {
 
   const onChange = event => setText(event.target.value);
 
+  const clearSearch = () => {
+    searchContext.clearSearch();
+    setText('');
+  };
+
   return (
     <form onSubmit={onSubmit} className={classes.root} noValidate autoComplete="off">
       <Container maxWidth="sm">
         <Grid align="center">
-          <TextField onChange={onChange} id="standard-basic" label="Repository name" />
+          <TextField value={text} onChange={onChange} id="standard-basic" label="Repository name" />
         </Grid>
         <div className={classes.buttons}>
           <Grid container spacing={2} justify="center">
@@ -47,7 +52,7 @@ export default function SearchForm() {
               </Button>
             </Grid>
             <Grid item>
-              <Button onClick={searchContext.clearSearch} variant="outlined" color="primary">
+              <Button onClick={clearSearch} variant="outlined" color="primary">
                 Cancel
               </Button>
             </Grid>
