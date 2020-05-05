@@ -43,7 +43,7 @@ export default function SearchForm() {
           && (
           <Grid container spacing={4}>
             {items.map((repo) => (
-              <SearchTableRow repo={repo} />
+              <SearchTableRow key={repo.id} repo={repo} />
             ))}
             <Pagination page={page} onChange={changePage} count={numberPages} color="secondary" />
           </Grid>
