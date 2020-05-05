@@ -2,11 +2,14 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import SearchContext from './searchContext';
 import SearchReducer from './searchReducer';
+import memo from '../../Utils';
 import {
   SEARCH_REPOS,
   CLEAR_SEARCH,
   SET_LOADING,
 } from './searchConst';
+
+const cachedAxiosGet = memo(axios.get);
 
 const SearchState = (props) => {
   const initialState = {
@@ -29,7 +32,7 @@ const SearchState = (props) => {
   const searchRepos = async (repoName, page = 1) => {
     setLoading();
 
-    const res = await axios.get(
+    const res = await cachedAxiosGet(
       `https://api.github.com/search/repositories?q=${encodeURI(repoName)}&sort=stars&order=desc&page=${page}&per_page=${initialState.perPage}`,
     );
 
