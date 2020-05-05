@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import SearchContext from '../State/Search/searchContext';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -18,22 +19,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchForm() {
   const classes = useStyles();
+  const searchContext = useContext(SearchContext);
+
+  const [text, setText] = useState('');
+
+  const onSubmit = event => {
+    event.preventDefault();
+    if (text) {
+      searchContext.searchRepos(text);
+      setText('');
+    }
+  };
+
+  const onChange = event => setText(event.target.value);
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
+    <form onSubmit={onSubmit} className={classes.root} noValidate autoComplete="off">
       <Container maxWidth="sm">
         <Grid align="center">
-          <TextField id="standard-basic" label="Repository name" />
+          <TextField onChange={onChange} id="standard-basic" label="Repository name" />
         </Grid>
         <div className={classes.buttons}>
           <Grid container spacing={2} justify="center">
             <Grid item>
-              <Button variant="contained" color="primary">
+              <Button type="submit" variant="contained" color="primary">
                 Search
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="outlined" color="primary">
+              <Button onClick={searchContext.clearSearch} variant="outlined" color="primary">
                 Cancel
               </Button>
             </Grid>
